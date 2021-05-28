@@ -14,35 +14,50 @@
 
 
 		<script type="module">
-      import * as THREE from 'js/build/three.module.js';
+      import * as THREE from 'https://cdn.skypack.dev/pin/three@v0.129.0-chk6X8RSBl37CcZQlxof/mode=imports/optimized/three.js';
+      import { RGBELoader } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/loaders/RGBELoader.js';
+      import { GUI } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/libs/dat.gui.module.js';
+			import { OrbitControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/OrbitControls.js';
 
-
-      // import { RGBELoader } from './jsm/loaders/RGBELoader.js';
 			// Our Javascript will go here.
       const scene = new THREE.Scene();
 
-      // new RGBELoader()
-			// 		.setDataType( THREE.UnsignedByteType )
-			// 		.setPath("img/Skies_1")
-			// 		.load( 'Skies_1.hdr', function ( texture ) {
+      new RGBELoader()
+					.setDataType( THREE.UnsignedByteType )
+					.setPath("img/Skies_1/")
+					.load( 'photo_studio_01_4k.hdr', function ( texture ) {
 
-			// 			const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
+						const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
 
-			// 			scene.background = envMap;
-			// 			scene.environment = envMap;
+						scene.background = envMap;
+						scene.environment = envMap;
 
-			// 			texture.dispose();
-			// 			pmremGenerator.dispose();
+						texture.dispose();
+						pmremGenerator.dispose();
 
-			// 			render();
+						render();
 
-			// 		} );
+					} );
 
       const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
       const renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio( window.devicePixelRatio );
       renderer.setSize( window.innerWidth, window.innerHeight );
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1;
+      // renderer.outputEncoding = THREE.sRGBEncoding;
       document.body.appendChild( renderer.domElement );
+
+      const pmremGenerator = new THREE.PMREMGenerator( renderer );
+			pmremGenerator.compileEquirectangularShader();
+
+      const controls = new OrbitControls( camera, renderer.domElement );
+      controls.addEventListener( 'change', render ); // use if there is no animation loop
+				controls.minDistance = 2;
+				controls.maxDistance = 10;
+				controls.target.set( 0, 0.5, - 0.2 );
+				controls.update();
 
       var geometry = new THREE.BoxGeometry( 1, 1, 1 );
       var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -57,10 +72,15 @@
         cube.rotation.x += 0.01;
         cube.rotation.y += 0.01;
 
-        renderer.render( scene, camera );
+        render();
       };
-
       animate();
+
+      function render() {
+
+renderer.render( scene, camera );
+
+}
 		</script>
 	</body>
 </html>
