@@ -23,8 +23,9 @@
         }
 
         #webgl {
-          pointer-events: none;
+          /* pointer-events: none; */
         }
+
     </style>
     
   </head>
@@ -45,7 +46,7 @@
 
       init();
       render();
-      animate(performance.now());
+      animate();
 
       function init(){
         //add camera
@@ -144,7 +145,7 @@
 				renderer2.setSize( window.innerWidth, window.innerHeight );
         renderer2.domElement.style.position = 'absolute';
         renderer2.domElement.style.top = 0;
-        renderer2.domElement.style.pointerEvent = 'auto';
+        renderer2.domElement.style.pointerEvents = 'auto';
 				document.querySelector('#css').appendChild( renderer2.domElement );
 
         // renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
@@ -168,7 +169,7 @@
         scene.add( light );
 
         //add controls
-        controls = new OrbitControls( camera, renderer2.domElement );
+        controls = new OrbitControls( camera, renderer.domElement );
         controls.addEventListener( 'change', render ); // use if there is no animation loop
 				controls.minDistance = 1;
 				controls.maxDistance = 3;
