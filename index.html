@@ -44,9 +44,11 @@
 			import { OrbitControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/OrbitControls.js';
       import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/renderers/CSS3DRenderer.js';
       import { TrackballControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/TrackballControls.js';
+      import { FirstPersonControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/FirstPersonControls.js';
 
       let camera, scene, renderer, renderer2, light;
 			let controls;
+      const clock = new THREE.Clock();
 
       init();
       render();
@@ -86,7 +88,7 @@
         // scene.add(product1);
         // console.log(product1);
 
-        for ( var i = 0; i < 50; i ++ ) {
+        for ( var i = 0; i < 5; i ++ ) {
 
           var elementObj = makeElementObject( 'div', 100, 100 );
           elementObj.css3dObject.element.textContent = "I am a <div> element! Edit me!"
@@ -173,25 +175,27 @@
         scene.add( light );
 
         //add controls
-        controls = new OrbitControls( camera, renderer2.domElement );
-        controls.addEventListener( 'change', render ); // use if there is no animation loop
-				controls.minDistance = 5;
-				controls.maxDistance = 5;
-				controls.target.set( 0, 0, 0 );
-        controls.update();
-        let tempCol = renderer2.domElement.firstElementChild;
-        console.log(Array.from(tempCol.children));
 
-        Array.from(tempCol.children).forEach(element => element.addEventListener('click', dispControls));
+        controls = new FirstPersonControls( camera, renderer2.domElement );
+				controls.movementSpeed = 15;
+				controls.lookSpeed = 0.05;
+        controls.constrainVertical = true;
 
-        function dispControls () {
-          controls.dispose();
-          console.log("controls");
-        }
-        // controls = new TrackballControls( camera, renderer.domElement );
+        // controls = new OrbitControls( camera, renderer2.domElement );
+        // controls.addEventListener( 'change', render ); // use if there is no animation loop
 				// controls.minDistance = 5;
-				// controls.maxDistance = 200;
-        // controls.addEventListener( 'change', render );
+				// controls.maxDistance = 5;
+				// controls.target.set( 0, 0, 0 );
+        // controls.update();
+        // let tempCol = renderer2.domElement.firstElementChild;
+        // console.log(Array.from(tempCol.children));
+        // Array.from(tempCol.children).forEach(element => element.addEventListener('click', dispControls));
+
+        // function dispControls () {
+        //   controls.dispose();
+        //   console.log("controls");
+        // }
+
 
 
       }
@@ -290,6 +294,7 @@
         renderer.render( scene, camera );
         renderer2.render( scene, camera );
         // renderer.setRenderTarget(null);
+        controls.update(clock.getDelta() );
       }
 
       function onDocumentMouseWheel( event ) {
