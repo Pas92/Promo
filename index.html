@@ -44,10 +44,11 @@
 			import { OrbitControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/OrbitControls.js';
       import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/renderers/CSS3DRenderer.js';
       import { TrackballControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/TrackballControls.js';
-      import { FirstPersonControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/FirstPersonControls.js';
+      import { FirstPersonControls } from '/js/three/jsm/controls/FirstPersonControls.js';
 
       let camera, scene, renderer, renderer2, light;
 			let controls;
+
       const clock = new THREE.Clock();
 
       init();
@@ -180,6 +181,12 @@
 				controls.movementSpeed = 15;
 				controls.lookSpeed = 0.05;
         controls.constrainVertical = true;
+        controls.onMouseDown = function(event) {
+          renderer2.domElement.preventDefault();
+        }
+
+
+
 
         // controls = new OrbitControls( camera, renderer2.domElement );
         // controls.addEventListener( 'change', render ); // use if there is no animation loop
@@ -282,7 +289,6 @@
 
       function animate () {
         requestAnimationFrame( animate );
-
         // mesh.rotation.x += 0.01;
         // mesh.rotation.y += 0.01;
 

@@ -2,7 +2,7 @@ import {
 	MathUtils,
 	Spherical,
 	Vector3
-} from '../../../build/three.module.js';
+} from '../../build/three.module.js';
 
 const _lookDirection = new Vector3();
 const _spherical = new Spherical();
@@ -83,49 +83,49 @@ class FirstPersonControls {
 
 		};
 
-		this.onMouseDown = function ( event ) {
+		// this.onMouseDown = function ( event ) {
 
-			if ( this.domElement !== document ) {
+		// 	if ( this.domElement !== document ) {
 
-				this.domElement.focus();
+		// 		this.domElement.focus();
 
-			}
+		// 	}
 
-			event.preventDefault();
+		// 	event.preventDefault();
 
-			if ( this.activeLook ) {
+		// 	if ( this.activeLook ) {
 
-				switch ( event.button ) {
+		// 		switch ( event.button ) {
 
-					case 0: this.moveForward = true; break;
-					case 2: this.moveBackward = true; break;
+		// 			case 0: this.moveForward = true; break;
+		// 			case 2: this.moveBackward = true; break;
 
-				}
+		// 		}
 
-			}
+		// 	}
 
-			this.mouseDragOn = true;
+		// 	this.mouseDragOn = true;
 
-		};
+		// };
 
-		this.onMouseUp = function ( event ) {
+		// this.onMouseUp = function ( event ) {
 
-			event.preventDefault();
+		// 	event.preventDefault();
 
-			if ( this.activeLook ) {
+		// 	if ( this.activeLook ) {
 
-				switch ( event.button ) {
+		// 		switch ( event.button ) {
 
-					case 0: this.moveForward = false; break;
-					case 2: this.moveBackward = false; break;
+		// 			case 0: this.moveForward = false; break;
+		// 			case 2: this.moveBackward = false; break;
 
-				}
+		// 		}
 
-			}
+		// 	}
 
-			this.mouseDragOn = false;
+		// 	this.mouseDragOn = false;
 
-		};
+		// };
 
 		this.onMouseMove = function ( event ) {
 
@@ -286,9 +286,9 @@ class FirstPersonControls {
 		this.dispose = function () {
 
 			this.domElement.removeEventListener( 'contextmenu', contextmenu );
-			this.domElement.removeEventListener( 'mousedown', _onMouseDown );
+			// this.domElement.removeEventListener( 'mousedown', _onMouseDown );
 			this.domElement.removeEventListener( 'mousemove', _onMouseMove );
-			this.domElement.removeEventListener( 'mouseup', _onMouseUp );
+			// this.domElement.removeEventListener( 'mouseup', _onMouseUp );
 
 			window.removeEventListener( 'keydown', _onKeyDown );
 			window.removeEventListener( 'keyup', _onKeyUp );
@@ -296,15 +296,15 @@ class FirstPersonControls {
 		};
 
 		const _onMouseMove = this.onMouseMove.bind( this );
-		const _onMouseDown = this.onMouseDown.bind( this );
-		const _onMouseUp = this.onMouseUp.bind( this );
+		// const _onMouseDown = this.onMouseDown.bind( this );
+		// const _onMouseUp = this.onMouseUp.bind( this );
 		const _onKeyDown = this.onKeyDown.bind( this );
 		const _onKeyUp = this.onKeyUp.bind( this );
 
 		this.domElement.addEventListener( 'contextmenu', contextmenu );
 		this.domElement.addEventListener( 'mousemove', _onMouseMove );
-		this.domElement.addEventListener( 'mousedown', _onMouseDown );
-		this.domElement.addEventListener( 'mouseup', _onMouseUp );
+		// this.domElement.addEventListener( 'mousedown', _onMouseDown );
+		// this.domElement.addEventListener( 'mouseup', _onMouseUp );
 
 		window.addEventListener( 'keydown', _onKeyDown );
 		window.addEventListener( 'keyup', _onKeyUp );
