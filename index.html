@@ -181,10 +181,6 @@
 				controls.movementSpeed = 15;
 				controls.lookSpeed = 0.05;
         controls.constrainVertical = true;
-        controls.onMouseDown = function(event) {
-          renderer2.domElement.preventDefault();
-        }
-
 
 
 
@@ -202,12 +198,19 @@
         //   controls.dispose();
         //   console.log("controls");
         // }
-
+        window.addEventListener( 'resize', onWindowResize );
 
 
       }
 
-			// Our Javascript will go here.
+      // Our Javascript will go here.
+      
+      function onWindowResize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize( window.innerWidth, window.innerHeight );
+          controls.handleResize();
+      }
 
       function makeElementObject(type, width, height) {
           const obj = new THREE.Object3D
