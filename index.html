@@ -42,7 +42,7 @@
       // import { FirstPersonControls } from '/js/three/jsm/controls/FirstPersonControls.js';
 
       let camera, scene, scene2, renderer, renderer2, light, light2;
-      let controls;
+      let controls, controls2;
       const QUARTER_CIRCLE = Math.PI / 2;
 
       const clock = new THREE.Clock();
@@ -50,6 +50,9 @@
       const mouse = new THREE.Vector2();
       const target = new THREE.Vector2();
       const windowHalf = new THREE.Vector2( window.innerWidth / 2, window.innerHeight / 2 );
+      let controlUpdateState;
+      let orbitControlFlag = false;
+      let camStatus = new THREE.Euler( 0, 0, 0, 'XYZ' );
 
       
 
@@ -60,7 +63,8 @@
       function init(){
         //add camera
         camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-        camera.position.z = 20;
+        camera.position.z = 1;
+        camStatus = camera.rotation;
         console.log(camera);
 
         //add scene
@@ -144,12 +148,13 @@
 
         //add controls
         controls = new OrbitControls(camera, renderer2.domElement );
-        // controls.addEventListener( 'change', render ); // use if there is no animation loop
+        controls.addEventListener( 'change', render ); // use if there is no animation loop
 				controls.minDistance = 1;
 				controls.maxDistance = 1;
 				controls.target.set( 0, 0, 0);
         controls.update();
         controls.enabled = false;
+
 
         // controls2 = new FirstPersonControls( camera, renderer2.domElement );
 				// controls2.lookSpeed = 0.01;
@@ -178,30 +183,57 @@
         //   Array.from(tempCol.children).forEach(element => element.style.pointerEvents = 'auto');
         //   console.log('restorePointerEvent');
         // }
-        function deleteControl (event) {
+        
+
+        window.addEventListener( 'resize', onWindowResize );
+        document.addEventListener('keydown', restoreControl);
+        document.addEventListener('keydown', info);
+        document.addEventListener('keyup', deleteControl);
+        document.addEventListener( 'mousemove', onMouseMove );
+        document.addEventListener( 'wheel', onDocumentMouseWheel );
+      }
+
+      // Our Javascript will go here.
+
+
+      function deleteControl (event) {
           if (event.code == 'Space') {
-            console.log('down');
+            // console.log('down');
+            camStatus = camera.rotation.clone();
+            // console.log(camStatus);
+            // console.log(camera.quaternion);
+            // let test = camera.quaternion.getWorldQuaternion();
+            console.log(camera.rotation);
+            
+            // console.log(test);
+            // camera.quaternion.setFromEuler( camStatus );
+
+            // console.log(camera.quaternion);
+            controls.update();
+            // console.log(camera.rotation);
             controls.enabled = false;
+            // console.log(camera.rotation);
+            orbitControlFlag = false;
             let tempCol = renderer2.domElement.firstElementChild;
             Array.from(tempCol.children).forEach(element => element.style.pointerEvents = 'auto');
           }
         }
       function restoreControl (event) {
         if (event.code == 'Space') {
-          console.log('up');
+          // console.log('up');
           controls.enabled = true;
+          controlUpdateState = controls.update();
+          orbitControlFlag = true;
           let tempCol = renderer2.domElement.firstElementChild;
           Array.from(tempCol.children).forEach(element => element.style.pointerEvents = 'none');
         }
       }
 
-        window.addEventListener( 'resize', onWindowResize );
-        document.addEventListener('keydown', restoreControl);
-        document.addEventListener('keyup', deleteControl);
-        document.addEventListener( 'mousemove', onMouseMove );
+      function info (event) {
+        if (event.code == 'Backspace') {
+          console.log(camera.quaternion);
+        }
       }
-
-      // Our Javascript will go here.
 
 
       function onMouseMove( event ) {
@@ -336,19 +368,37 @@
         // mesh.rotation.x += 0.01;
         // mesh.rotation.y += 0.01;
 
-        target.x = ( 1 - mouse.x ) * 0.0002;
-        target.y = ( 1 - mouse.y ) * 0.0002;
-        camera.rotation.x += 0.05 * ( target.y - camera.rotation.x );
-        camera.rotation.y += 0.05 * ( target.x - camera.rotation.y );
+
+        if(!orbitControlFlag) {
+
+          target.x =camStatus.y + (1 - mouse.x ) * 0.0002;
+          target.y = camStatus.x + (1 - mouse.y ) * 0.0002;
+
+
+
+          if (camera.rotation.y >= (0-Math.PI/2) && camera.rotation.y <= (Math.PI/2)) {
+
+          } else {
+
+          }
+
+
+            camera.rotation.x += 0.05*( target.y - camera.rotation.x );
+            camera.rotation.y += 0.05*( target.x - camera.rotation.y);
+
+          // camera.rotation.z = camStatus.z;
+          
+
+
+        } 
         render();
+
       };
 
       function render() {
-        // renderer.setRenderTarget(renderTarget);
 
         renderer.render( scene, camera );
         renderer2.render( scene2, camera );
-        // renderer.setRenderTarget(null);
         // controls.update();
         // controls2.update(clock.getDelta() );
       }
@@ -360,7 +410,7 @@
         camera.updateProjectionMatrix();
       }
 
-      document.addEventListener( 'wheel', onDocumentMouseWheel );
+
 
     </script>
 
