@@ -415,6 +415,8 @@
         // controls2.update(clock.getDelta() );
 
         raycaster.setFromCamera( pointer, camera );
+        console.log(raycaster.ray.direction);
+        camera.lookAt(raycaster.ray.direction);
 
 				const intersects = raycaster.intersectObjects( scene.children, true );
 
