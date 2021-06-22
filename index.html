@@ -41,7 +41,7 @@
       import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/renderers/CSS3DRenderer.js';
       // import { FirstPersonControls } from '/js/three/jsm/controls/FirstPersonControls.js';
 
-      let camera, scene, scene2, renderer, renderer2, light, light2;
+      let camera, scene, scene2, renderer, renderer2, light, light2, raycaster;
       let controls, controls2;
       const QUARTER_CIRCLE = Math.PI / 2;
 
@@ -53,6 +53,9 @@
       let controlUpdateState;
       let orbitControlFlag = false;
       let camStatus = new THREE.Euler( 0, 0, 0, 'XYZ' );
+
+      let INTERSECTED;
+      const pointer = new THREE.Vector2();
 
       
 
@@ -83,27 +86,16 @@
           ] );
         
         //add domElement
-        // let page1 = document.createElement('div');
-        // page1.style.width = '1000px';
-        // page1.style.height ='1000px';
-        // page1.style.backgroundColor = '0xbbbbbb';
-        // page1.style.opacity = '0.999';
-        // // page1.setAttribute('src', '/iframes/1.html');
-
-        // let product1 = new CSS3DObject(page1);
-        // product1.position.x = 0;
-        // product1.position.y = 0;
-        // product1.position.z = 8;
-        // scene.add(product1);
-        // console.log(product1);
 
         var elementObj = makeElementObject( 'iframe', 1050, 800 );
         elementObj.css3dObject.element.setAttribute('src', 'iframes/1.html');
-        elementObj.css3dObject.element.style.border = 'none';
+        elementObj.css3dObject.element.style.border = '1px solid transparent';
+        elementObj.css3dObject.element.style.borderRadius = '40px'
 
         elementObj.position.x = 0;
         elementObj.position.y = 0;
-        elementObj.position.z = -90;
+        elementObj.position.z = -140;
+        elementObj.lookAt(0,0,0);
         elementObj.scale.x = 0.1;
         elementObj.scale.y = 0.1;
         elementObj.scale.z = 0.1;
@@ -111,14 +103,45 @@
         scene2.add( elementObj );
 
         //add geometry
-        let objPlate = makePlate(1050/10,800/10,5);
-        objPlate.position.x = -(1050/10)/2;
-        objPlate.position.y = -(800/10)/2;
-        objPlate.position.z = -90;
-        scene.add(objPlate);
+        for (let i=0; i<8; i++) {
+          let objPlate2 = makePlate(1050/10 + 2,800/10 + 2,5);
+        let box2 = new THREE.Box3().setFromObject( objPlate2 );
+        box2.center(objPlate2.position);
+        objPlate2.position.multiplyScalar(-1);
+        let pivot2 = new THREE.Group();
+        scene.add(pivot2);
+        pivot2.add(objPlate2);
+        let pivot2Coord = new THREE.Cylindrical(140, i*(2*Math.PI)/8);
+        pivot2.position.setFromCylindrical(pivot2Coord);
+        pivot2.lookAt(0,0,0);
+        }
+
+        // let objPlate = makePlate(1050/10,800/10,5);
+        // let box = new THREE.Box3().setFromObject( objPlate );
+        // box.center(objPlate.position);
+        // objPlate.position.multiplyScalar(-1);
+        // let pivot = new THREE.Group();
+        // scene.add(pivot);
+        // pivot.add(objPlate);
+        // pivot.position.set(0,0,-90);
+        // pivot.lookAt(0, 0, 0);
+
+
+        // let objPlate2 = makePlate(1050/10,800/10,5);
+        // let box2 = new THREE.Box3().setFromObject( objPlate2 );
+        // box2.center(objPlate2.position);
+        // objPlate2.position.multiplyScalar(-1);
+        // let pivot2 = new THREE.Group();
+        // scene.add(pivot2);
+        // pivot2.add(objPlate2);
+        // let pivot2Coord = new THREE.Cylindrical(90, QUARTER_CIRCLE);
+        // pivot2.position.setFromCylindrical(pivot2Coord);
+        // pivot2.lookAt(0,0,0);
+
+
 
         //add renderers
-        
+        raycaster = new THREE.Raycaster();
 
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setClearColor( 0x000000, 0 );
@@ -136,7 +159,7 @@
         renderer2.domElement.style.position = 'absolute';
         renderer2.domElement.style.top = 0;
         renderer2.domElement.style.pointerEvents = 'auto';
-        console.log(renderer2);
+        // console.log(renderer2);
 				document.querySelector('#webgl').appendChild( renderer2.domElement );
 
         //add light
@@ -151,7 +174,7 @@
         controls.addEventListener( 'change', render ); // use if there is no animation loop
 				controls.minDistance = 1;
 				controls.maxDistance = 1;
-				controls.target.set( 0, 0, 0);
+				controls.target.set(0, 0, 0);
         controls.update();
         controls.enabled = false;
 
@@ -191,6 +214,8 @@
         document.addEventListener('keyup', deleteControl);
         document.addEventListener( 'mousemove', onMouseMove );
         document.addEventListener( 'wheel', onDocumentMouseWheel );
+
+        document.addEventListener( 'mousemove', onPointerMove );
       }
 
       // Our Javascript will go here.
@@ -198,21 +223,12 @@
 
       function deleteControl (event) {
           if (event.code == 'Space') {
-            // console.log('down');
-            camStatus = camera.rotation.clone();
-            // console.log(camStatus);
-            // console.log(camera.quaternion);
-            // let test = camera.quaternion.getWorldQuaternion();
-            console.log(camera.rotation);
-            
-            // console.log(test);
-            // camera.quaternion.setFromEuler( camStatus );
 
-            // console.log(camera.quaternion);
+            camStatus = camera.rotation.clone();
+            console.log(camera.rotation);
             controls.update();
-            // console.log(camera.rotation);
             controls.enabled = false;
-            // console.log(camera.rotation);
+            camera.updateProjectionMatrix();
             orbitControlFlag = false;
             let tempCol = renderer2.domElement.firstElementChild;
             Array.from(tempCol.children).forEach(element => element.style.pointerEvents = 'auto');
@@ -231,7 +247,7 @@
 
       function info (event) {
         if (event.code == 'Backspace') {
-          console.log(camera.quaternion);
+          console.log(camera);
         }
       }
 
@@ -370,27 +386,23 @@
 
 
         if(!orbitControlFlag) {
-
-          target.x =camStatus.y + (1 - mouse.x ) * 0.0002;
-          target.y = camStatus.x + (1 - mouse.y ) * 0.0002;
+          // camera.rotation.normalize();
 
 
+          // target.x =camStatus.y + (1 - mouse.x ) * 0.0002;
+          // target.y = camStatus.x + (1 - mouse.y ) * 0.0002;
 
-          if (camera.rotation.y >= (0-Math.PI/2) && camera.rotation.y <= (Math.PI/2)) {
+          //   camera.rotation.x += 0.05*( target.y - camera.rotation.x );
+          //   camera.rotation.y += 0.05*( target.x - camera.rotation.y);
 
-          } else {
-
-          }
-
-
-            camera.rotation.x += 0.05*( target.y - camera.rotation.x );
-            camera.rotation.y += 0.05*( target.x - camera.rotation.y);
 
           // camera.rotation.z = camStatus.z;
           
 
 
-        } 
+        } else {
+          controls.update();
+        }
         render();
 
       };
@@ -401,6 +413,23 @@
         renderer2.render( scene2, camera );
         // controls.update();
         // controls2.update(clock.getDelta() );
+
+        raycaster.setFromCamera( pointer, camera );
+
+				const intersects = raycaster.intersectObjects( scene.children, true );
+
+				if ( intersects.length > 0 ) {
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+						INTERSECTED = intersects[ 0 ].object;
+						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+						INTERSECTED.material.emissive.setHex( 0xff0000 );
+            console.log(INTERSECTED);
+					}
+				} else {
+					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+					INTERSECTED = null;
+				}
       }
 
       function onDocumentMouseWheel( event ) {
@@ -410,7 +439,12 @@
         camera.updateProjectionMatrix();
       }
 
+      function onPointerMove( event ) {
 
+pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+}
 
     </script>
 
