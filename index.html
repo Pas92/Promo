@@ -85,35 +85,104 @@
             'nz.png'
           ] );
         
-        //add domElement
+        //add domElements
+        for (let i=0; i<6; i++) {
+          let elementObj = makeElementObject( 'iframe', 1050, 800 );
+          elementObj.css3dObject.element.setAttribute('src', 'iframes/1.html');
+          elementObj.css3dObject.element.style.border = '1px solid transparent';
+          elementObj.css3dObject.element.style.borderRadius = '40px';
+          let frameBlock = elementObj.css3dObject.element;
+          
+          frameBlock.onload = function(){
+            // let docBlock = frameBlock.contentDocument.querySelector('#slider');
+            // docBlock.style.display = 'block';
+            // let docBlock2 = frameBlock.contentDocument.querySelector('#info');
+            // docBlock2.style.display = 'none';
+            let sections = frameBlock.contentDocument.querySelectorAll('section');
+            Array.from(sections).forEach(function(element) {
+              element.style.display = 'none';
+            });
+            sections.item(i).style.display = 'block'
+          };
 
-        var elementObj = makeElementObject( 'iframe', 1050, 800 );
-        elementObj.css3dObject.element.setAttribute('src', 'iframes/1.html');
-        elementObj.css3dObject.element.style.border = '1px solid transparent';
-        elementObj.css3dObject.element.style.borderRadius = '40px'
+          elementObj.scale.x = 0.1;
+          elementObj.scale.y = 0.1;
+          elementObj.scale.z = 0.1;
 
-        elementObj.position.x = 0;
-        elementObj.position.y = 0;
-        elementObj.position.z = -140;
-        elementObj.lookAt(0,0,0);
-        elementObj.scale.x = 0.1;
-        elementObj.scale.y = 0.1;
-        elementObj.scale.z = 0.1;
+          let elementObjCoord = new THREE.Cylindrical(101,(Math.PI) - (i*(2*Math.PI)/6));
+          elementObj.position.setFromCylindrical(elementObjCoord);
+          elementObj.lookAt(0,0,0);
+          
 
-        scene2.add( elementObj );
+          scene2.add( elementObj );
+        }
+
+        // var elementObj = makeElementObject( 'iframe', 1050, 800 );
+        // elementObj.css3dObject.element.setAttribute('src', 'iframes/1.html');
+        // elementObj.css3dObject.element.style.border = '1px solid transparent';
+        // elementObj.css3dObject.element.style.borderRadius = '40px';
+        // let frameBlock = elementObj.css3dObject.element;
+        
+        // frameBlock.onload = function(){
+        //   let docBlock = frameBlock.contentDocument.querySelector('#slider');
+        //   docBlock.style.display = 'block';
+        //   let docBlock2 = frameBlock.contentDocument.querySelector('#info');
+        //   docBlock2.style.display = 'none';
+        //   // console.log (docBlock);
+        // };
+
+        // elementObj.position.x = 0;
+        // elementObj.position.y = 0;
+        // elementObj.position.z = -101;
+        // elementObj.lookAt(0,0,0);
+        // elementObj.scale.x = 0.1;
+        // elementObj.scale.y = 0.1;
+        // elementObj.scale.z = 0.1;
+
+        // scene2.add( elementObj );
+
+
+        // let elementObj2 = elementObj.css3dObject.clone();
+        // console.log (elementObj2.element);
+        // // // elementObj2.css3dObject.element.setAttribute('src', 'iframes/1.html');
+        // // // elementObj2.css3dObject.element.style.border = '1px solid transparent';
+        // // // elementObj2.css3dObject.element.style.borderRadius = '40px';
+        // let frameBlock2 = elementObj2.element;
+        
+        // frameBlock2.onload = function(){
+        //   let docBlock3 = frameBlock2.contentDocument.querySelector('#slider');
+        //   docBlock3.style.display = 'none';
+        //   let docBlock4 = frameBlock2.contentDocument.querySelector('#info');
+        //   docBlock4.style.display = 'block';
+        //   console.log (docBlock3);
+        // };
+
+        // elementObj2.position.x = 0;
+        // elementObj2.position.y = 140;
+        // elementObj2.position.z = -101;
+        // elementObj2.lookAt(0,0,0);
+        // elementObj2.scale.x = 0.1;
+        // elementObj2.scale.y = 0.1;
+        // elementObj2.scale.z = 0.1;
+
+        // scene2.add( elementObj2 );
+
+        // let testClone = elementObj.css3dObject.clone();
+        // console.log(testClone);
+
 
         //add geometry
-        for (let i=0; i<8; i++) {
+        for (let i=0; i<6; i++) {
           let objPlate2 = makePlate(1050/10 + 2,800/10 + 2,5);
-        let box2 = new THREE.Box3().setFromObject( objPlate2 );
-        box2.center(objPlate2.position);
-        objPlate2.position.multiplyScalar(-1);
-        let pivot2 = new THREE.Group();
-        scene.add(pivot2);
-        pivot2.add(objPlate2);
-        let pivot2Coord = new THREE.Cylindrical(140, i*(2*Math.PI)/8);
-        pivot2.position.setFromCylindrical(pivot2Coord);
-        pivot2.lookAt(0,0,0);
+          let box2 = new THREE.Box3().setFromObject( objPlate2 );
+          box2.center(objPlate2.position);
+          objPlate2.position.multiplyScalar(-1);
+          let pivot2 = new THREE.Group();
+          scene.add(pivot2);
+          pivot2.add(objPlate2);
+          let pivot2Coord = new THREE.Cylindrical(100, i*(2*Math.PI)/6);
+          pivot2.position.setFromCylindrical(pivot2Coord);
+          pivot2.lookAt(0,0,0);
         }
 
         // let objPlate = makePlate(1050/10,800/10,5);
@@ -415,8 +484,12 @@
         // controls2.update(clock.getDelta() );
 
         raycaster.setFromCamera( pointer, camera );
-        console.log(raycaster.ray.direction);
-        camera.lookAt(raycaster.ray.direction);
+        // console.log(raycaster.ray.direction);
+
+
+        // let targetX = ;
+        // targetX += raycaster.ray.direction.x-0.1;
+        camera.lookAt(raycaster.ray.direction.x*0.1, raycaster.ray.direction.y*0.1, raycaster.ray.direction.z*0.1);
 
 				const intersects = raycaster.intersectObjects( scene.children, true );
 
