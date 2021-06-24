@@ -39,10 +39,12 @@
       import { GUI } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/libs/dat.gui.module.js';
 			import { OrbitControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/OrbitControls.js';
       import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/renderers/CSS3DRenderer.js';
+      // import Stats from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/libs/stats.module.js';
       // import { FirstPersonControls } from '/js/three/jsm/controls/FirstPersonControls.js';
 
       let camera, scene, scene2, renderer, renderer2, light, light2, raycaster;
       let controls, controls2;
+      let iframes = [];
       const QUARTER_CIRCLE = Math.PI / 2;
 
       const clock = new THREE.Clock();
@@ -56,6 +58,10 @@
 
       let INTERSECTED;
       const pointer = new THREE.Vector2();
+
+      // const container = document.getElementById( 'container' );
+      // const stats = new Stats();
+			// container.appendChild( stats.dom );
 
       
 
@@ -103,7 +109,17 @@
               element.style.display = 'none';
             });
             sections.item(i).style.display = 'block'
+
+            if(i === 0) {
+              let nextSliderButton = frameBlock.contentDocument.querySelector('.slider-btn-next');
+              nextSliderButton.addEventListener('click', goToNextContent);
+              console.log(nextSliderButton);
+            } else {
+              iframes.push(frameBlock);
+            }
           };
+
+          
 
           elementObj.scale.x = 0.1;
           elementObj.scale.y = 0.1;
@@ -116,6 +132,7 @@
 
           scene2.add( elementObj );
         }
+        console.log(iframes);
 
         // var elementObj = makeElementObject( 'iframe', 1050, 800 );
         // elementObj.css3dObject.element.setAttribute('src', 'iframes/1.html');
@@ -409,7 +426,9 @@
         return mesh
       }
 
-      // const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight)
+      function goToNextContent() {
+        iframes.forEach(element => element.contentWindow.goToNextSlide());
+      }
 
       // const envM = new RGBELoader()
 			// 		.setDataType( THREE.UnsignedByteType )
@@ -436,12 +455,8 @@
       // light.position.set(0, 5, -5);
       // scene.add(light);
 
-      
-
       // const light = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.5 );
       // scene.add( light );
-
-      
 
       // const pmremGenerator = new THREE.PMREMGenerator( renderer );
 			// pmremGenerator.compileEquirectangularShader();
@@ -449,9 +464,7 @@
 
       function animate () {
         requestAnimationFrame( animate );
-        // console.log(camera.rotation.x);
-        // mesh.rotation.x += 0.01;
-        // mesh.rotation.y += 0.01;
+        // stats.update();
 
 
         if(!orbitControlFlag) {
@@ -480,15 +493,9 @@
 
         renderer.render( scene, camera );
         renderer2.render( scene2, camera );
-        // controls.update();
         // controls2.update(clock.getDelta() );
 
         raycaster.setFromCamera( pointer, camera );
-        // console.log(raycaster.ray.direction);
-
-
-        // let targetX = ;
-        // targetX += raycaster.ray.direction.x-0.1;
         camera.lookAt(raycaster.ray.direction.x*0.1, raycaster.ray.direction.y*0.1, raycaster.ray.direction.z*0.1);
 
 				const intersects = raycaster.intersectObjects( scene.children, true );
