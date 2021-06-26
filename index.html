@@ -41,10 +41,11 @@
       import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/renderers/CSS3DRenderer.js';
       import Stats from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/libs/stats.module.js';
       import { OBJLoader } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/loaders/OBJLoader.js';
+      import { DeviceOrientationControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/DeviceOrientationControls.js';
       // import { FirstPersonControls } from '/js/three/jsm/controls/FirstPersonControls.js';
 
       let camera, scene, scene2, renderer, renderer2, light, light2, raycaster;
-      let controls, controls2;
+      let controls, controls2, devControls;
       let iframes = [];
       const QUARTER_CIRCLE = Math.PI / 2;
 
@@ -300,7 +301,7 @@
         controls.update();
         controls.enabled = false;
 
-
+        devControls = new DeviceOrientationControls( camera );
         // controls2 = new FirstPersonControls( camera, renderer2.domElement );
 				// controls2.lookSpeed = 0.01;
         // controls2.constrainVertical = true;
@@ -501,7 +502,11 @@
       function animate () {
         requestAnimationFrame( animate );
         stats.update();
-        connectorModel.rotation.y += 0.01
+        connectorModel.rotation.y += 0.01;
+        if(navigator.userAgentData.mobile) {
+          devControls.update();
+        }
+        
 
 
         if(!orbitControlFlag) {
