@@ -32,6 +32,8 @@
   
 	<body>
 
+    <div id="css"><div id="container"></div></div>
+    <div id="webgl"></div>
 
 		<script type="module">
       import * as THREE from 'https://cdn.skypack.dev/pin/three@v0.129.0-chk6X8RSBl37CcZQlxof/mode=imports/optimized/three.js';
@@ -67,6 +69,10 @@
       const container = document.getElementById( 'container' );
       const stats = new Stats();
 			container.appendChild( stats.dom );   
+
+      let manager;
+      let mainObj = document.querySelector('#webgl');
+      console.log(mainObj);
 
       init();
       render();
@@ -107,6 +113,8 @@
             'pz.png',
             'nz.png'
           ] );
+
+
 
         //add camera
         camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -216,6 +224,23 @@
         controls.enabled = false;
 
         devControls = new DeviceOrientationControls( camera );
+
+        manager = new THREE.LoadingManager();
+          // manager.onStart = function (mainObj, itemsLoaded, itemsTotal ) {
+          //   console.log( 'Начата загрузка файлов: '+url+'.\nЗагружено '+itemsLoaded+' из '+itemsTotal+' файлов.' );
+          // };
+
+          manager.onLoad = function ( ) {
+            console.log( 'Загрузка завершена!');
+          };
+
+          // manager.onProgress = function ( mainObj, itemsLoaded, itemsTotal ) {
+          //   console.log( 'Загрузка файлов: '+url+'.\nЗагружено '+itemsLoaded+' из '+itemsTotal+' файлов.' );
+          // };
+
+          // manager.onError = function ( mainObj ) {
+          //   console.log( 'Произошла ошибка при загрузке '+url );
+          // };
 
         window.addEventListener( 'resize', onWindowResize );
         document.addEventListener('keydown', restoreControl);
@@ -384,8 +409,6 @@
 
     </script>
 
-    <div id="css"><div id="container"></div></div>
-    <div id="webgl"></div>
 
   
 	</body>
