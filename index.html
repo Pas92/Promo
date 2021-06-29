@@ -131,7 +131,9 @@
 
             if(i === 0) {
               let nextSliderButton = frameBlock.contentDocument.querySelector('.slider-btn-next');
+              let prevSliderButton = frameBlock.contentDocument.querySelector('.slider-btn-prev');
               nextSliderButton.addEventListener('click', goToNextContent);
+              prevSliderButton.addEventListener('click', goToPrevContent);
               console.log(nextSliderButton);
             } else {
               iframes.push(frameBlock);
@@ -320,6 +322,10 @@
 
       function goToNextContent() {
         iframes.forEach(element => element.contentWindow.goToNextSlide());
+      }
+
+      function goToPrevContent() {
+        iframes.forEach(element => element.contentWindow.goToPrevSlide());
       }
 
       function onDocumentMouseWheel( event ) {

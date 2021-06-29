@@ -182,12 +182,12 @@
   <script src="js/simpleSlider.min.js"></script>
 
   <script>
-    let sliderSlider = new SimpleSlider('.simple-slider-first-slider');
-    let infoSlider = new SimpleSlider('.simple-slider-second-info');
-    let capabilitiesSlider = new SimpleSlider('.simple-slider-third-capabilities');
-    let modelSlider = new SimpleSlider('.simple-slider-fourth-model');
-    let gallerySlider = new SimpleSlider('.simple-slider-fifth-gallery');
-    let downloadsSlider = new SimpleSlider('.simple-slider-sixth-downloads');
+    let sliderSlider = new SimpleSlider('.simple-slider-first-slider', {enableDrag: false});
+    let infoSlider = new SimpleSlider('.simple-slider-second-info', {enableDrag: false});
+    let capabilitiesSlider = new SimpleSlider('.simple-slider-third-capabilities', {enableDrag: false});
+    let modelSlider = new SimpleSlider('.simple-slider-fourth-model', {enableDrag: false});
+    let gallerySlider = new SimpleSlider('.simple-slider-fifth-gallery', {enableDrag: false});
+    let downloadsSlider = new SimpleSlider('.simple-slider-sixth-downloads', {enableDrag: false});
 
     sliderSlider.buttons[0].addEventListener('click', goToPrev);
     sliderSlider.buttons[1].addEventListener('click', goToNext);
@@ -216,6 +216,15 @@
       modelSlider.nextSlide();
       gallerySlider.nextSlide();
       downloadsSlider.nextSlide();
+    }
+
+    function goToPrevSlide() {
+      infoSlider.prevSlide();
+      infoSlider.prevSlide();
+      capabilitiesSlider.prevSlide();
+      modelSlider.prevSlide();
+      gallerySlider.prevSlide();
+      downloadsSlider.prevSlide();
     }
   </script>
 </body>
