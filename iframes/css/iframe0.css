@@ -25,3 +25,16 @@ section {
   min-height: 100%;
   min-width: 40px;
 }
+
+#preloader {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: salmon;
+  margin: auto;
+  vertical-align: middle;
+  z-index: 999;
+}

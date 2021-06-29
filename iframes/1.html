@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link type="" rel="stylesheet" href="css/bootstrap-reboot.css">
+  <link type="" rel="stylesheet" href="../css/bootstrap-reboot.css">
   <link rel="stylesheet" href="css/simpleSlider.min.css"> 
   <link type="" rel="stylesheet" href="css/iframe0.css">
 </head>
 
 <body>
+  <div id="preloader">
+    <p class="bigtext">LOADING...</p>
+  </div>
   <section id="slider">
     <h1>ОСНОВНОЙ СЛАЙДЕР</h1>
     <!-- <img src="img/1/ODU_MINI-SNAP_Nut-Federkodierung_neu.png" alt=""> -->
@@ -180,52 +183,6 @@
   </section>
 
   <script src="js/simpleSlider.min.js"></script>
-
-  <script>
-    let sliderSlider = new SimpleSlider('.simple-slider-first-slider', {enableDrag: false});
-    let infoSlider = new SimpleSlider('.simple-slider-second-info', {enableDrag: false});
-    let capabilitiesSlider = new SimpleSlider('.simple-slider-third-capabilities', {enableDrag: false});
-    let modelSlider = new SimpleSlider('.simple-slider-fourth-model', {enableDrag: false});
-    let gallerySlider = new SimpleSlider('.simple-slider-fifth-gallery', {enableDrag: false});
-    let downloadsSlider = new SimpleSlider('.simple-slider-sixth-downloads', {enableDrag: false});
-
-    sliderSlider.buttons[0].addEventListener('click', goToPrev);
-    sliderSlider.buttons[1].addEventListener('click', goToNext);
-
-
-    function goToPrev(event) {
-      infoSlider.prevSlide();
-      infoSlider.prevSlide();
-      capabilitiesSlider.prevSlide();
-      modelSlider.prevSlide();
-      gallerySlider.prevSlide();
-      downloadsSlider.prevSlide();
-    }
-
-    function goToNext(event) {
-      infoSlider.nextSlide();
-      capabilitiesSlider.nextSlide();
-      modelSlider.nextSlide();
-      gallerySlider.nextSlide();
-      downloadsSlider.nextSlide();
-    }
-
-    function goToNextSlide() {
-      infoSlider.nextSlide();
-      capabilitiesSlider.nextSlide();
-      modelSlider.nextSlide();
-      gallerySlider.nextSlide();
-      downloadsSlider.nextSlide();
-    }
-
-    function goToPrevSlide() {
-      infoSlider.prevSlide();
-      infoSlider.prevSlide();
-      capabilitiesSlider.prevSlide();
-      modelSlider.prevSlide();
-      gallerySlider.prevSlide();
-      downloadsSlider.prevSlide();
-    }
-  </script>
+  <script src="js/iframe0.js"></script>
 </body>
 </html>
