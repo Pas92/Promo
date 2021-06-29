@@ -1,6 +1,16 @@
+document.body.style.overflow = 'hidden';
+
 window.onload = function(){
-  let preLoader = document.body.querySelector("#preloader");
-  preLoader.style.display = 'none';
+  const loadingScreen = document.getElementById( 'loading-screen' );
+  loadingScreen.classList.add( 'fade-out' );
+  loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
+  document.body.style.overflow
+  document.body.style.overflow = 'inherit';
+}
+
+function onTransitionEnd( event ) {
+  const element = event.target;
+  element.remove();
 }
 
 let sliderSlider = new SimpleSlider('.simple-slider-first-slider', {enableDrag: false});
