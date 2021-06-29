@@ -1,6 +1,4 @@
 import * as THREE from 'https://cdn.skypack.dev/pin/three@v0.129.0-chk6X8RSBl37CcZQlxof/mode=imports/optimized/three.js';
-import { RGBELoader } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/loaders/RGBELoader.js';
-import { GUI } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/libs/dat.gui.module.js';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/renderers/CSS3DRenderer.js';
 import Stats from 'https://cdn.skypack.dev/three@v0.129.0-chk6X8RSBl37CcZQlxof/examples/jsm/libs/stats.module.js';
@@ -9,22 +7,15 @@ import { DeviceOrientationControls } from 'https://cdn.skypack.dev/three@v0.129.
 // import { FirstPersonControls } from '/js/three/jsm/controls/FirstPersonControls.js';
 
 let camera, fov, scene, scene2, renderer, renderer2, light, light2, raycaster;
-let controls, controls2, devControls;
+let controls, devControls;
 let iframes = [];
 
-const clock = new THREE.Clock();
-
-const mouse = new THREE.Vector2();
-const target = new THREE.Vector2();
-const windowHalf = new THREE.Vector2( window.innerWidth / 2, window.innerHeight / 2 );
 let controlUpdateState;
 let orbitControlFlag = false;
-let camStatus = new THREE.Euler( 0, 0, 0, 'XYZ' );
 
 let INTERSECTED;
 const pointer = new THREE.Vector2();
 
-let object;
 let connectorModel;
 
 const container = document.getElementById( 'container' );
@@ -33,9 +24,6 @@ container.appendChild( stats.dom );
 
 const startButton = document.getElementById( 'startButton' );
 startButton.addEventListener( 'click', function () {
-  // init();
-  // render();
-  // animate(performance.now());
   const overlay = document.getElementById( 'overlay' );
   overlay.style.opacity = 0;
   setTimeout(() => overlay.remove(),350);
@@ -99,8 +87,6 @@ function init() {
   } else {
     camera.position.z = 1;
   }
-  camStatus = camera.rotation;
-  console.log(camera);
 
   //add domElements
   for (let i=0; i<6; i++) {
@@ -225,7 +211,6 @@ function onTransitionEnd( event ) {
 function deleteControl (event) {
     if (event.code == 'Space') {
 
-      camStatus = camera.rotation.clone();
       console.log(camera.rotation);
       controls.update();
       controls.enabled = false;
