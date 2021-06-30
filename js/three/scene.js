@@ -101,7 +101,9 @@ function init() {
       Array.from(sections).forEach(function(element) {
         element.style.display = 'none';
       });
-      sections.item(i).style.display = 'block'
+      sections.item(i).style.display = 'block';
+      frameBlock.contentDocument.addEventListener('keydown', restoreControl);
+      frameBlock.contentDocument.addEventListener('keyup', deleteControl);
 
       if(i === 0) {
         let nextSliderButton = frameBlock.contentDocument.querySelector('.slider-btn-next');
