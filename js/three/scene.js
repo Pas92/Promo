@@ -18,15 +18,30 @@ const pointer = new THREE.Vector2();
 
 let connectorModel;
 
+if(navigator.userAgentData.mobile) {
+  fov = 75;
+} else {
+  fov = 55;
+}
+
 const container = document.getElementById( 'container' );
 const stats = new Stats();
 container.appendChild( stats.dom );
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  if(navigator.userAgentData.mobile) {
+    const promptIframe = document.querySelector('#overlay iframe');
+    const promptHeader = document.querySelector('#overlay h2');
+    promptIframe.remove();
+    promptHeader.remove();
+  }
+});
 
 const startButton = document.getElementById( 'startButton' );
 startButton.addEventListener( 'click', function () {
   const overlay = document.getElementById( 'overlay' );
   overlay.style.opacity = 0;
-  setTimeout(() => overlay.remove(),350);
+  setTimeout(() => overlay.remove(),300);
 } );
 
 const loadingManager = THREE.DefaultLoadingManager.onProgress = ( () => {
@@ -76,11 +91,6 @@ function init() {
     ] );
 
   //add camera
-  if(navigator.userAgentData.mobile) {
-    fov = 75;
-  } else {
-    fov = 55;
-  }
   camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 1000 );
   if(navigator.userAgentData.mobile) {
     camera.position.z = 0;
